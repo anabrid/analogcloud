@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../img/favicon.ico" rel="shortcut icon"/>
+<title>User Guide - Analog Cloud</title>
+<link href="../css/theme.css" rel="stylesheet"/>
+<link href="../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "User Guide";
+        var mkdocs_page_input_path = "user/index.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href=".."> Analog Cloud
+        </a><div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal current" href="#">User Guide</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="#what-analog-cloud-is">What Analog Cloud is</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#capabilities-exposed-to-users">Capabilities exposed to users</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#supported-devices">Supported devices</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#how-users-interact-with-the-system">How users interact with the system</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#interaction-model">Interaction model</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#where-to-go-next">Where to go next</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started/">Getting Started</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli/">CLI Reference</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="programmatic/">Programmatic Usage</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/">REST API</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="..">Analog Cloud</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href=".."></a></li>
+<li class="breadcrumb-item">User Guide</li>
+<li class="breadcrumb-item active">User Guide</li>
+<li class="wy-breadcrumbs-aside">
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<h1 id="user-guide">User Guide<a class="headerlink" href="#user-guide" title="Permanent link">¶</a></h1>
+<h2 id="what-analog-cloud-is">What Analog Cloud is<a class="headerlink" href="#what-analog-cloud-is" title="Permanent link">¶</a></h2>
+<p>Analog Cloud is a cloud system for the shared operation of <a href="https://www.anabrid.com">anabrid's</a> analog-digital hybrid computers. A single deployment hosts the <code>redacc</code> compiler, a digital simulator for analog devices, and worker processes that drive the physical hardware. Multiple devices can be attached to a single deployment and are shared among users under per-user, per-device-class rate limits. All functionality is gated by an API key (see <a href="getting-started/">Getting Started</a>).</p>
+<h2 id="capabilities-exposed-to-users">Capabilities exposed to users<a class="headerlink" href="#capabilities-exposed-to-users" title="Permanent link">¶</a></h2>
+<p>The system exposes three core capabilities to authenticated users:</p>
+<ul>
+<li><strong>Compilation</strong> — translate an ODE written in analang (a text-based DSL) into a circuit configuration for a target device.</li>
+<li><strong>Simulation</strong> — execute a compiled module on a digital simulator and retrieve measurements.</li>
+<li><strong>Execution</strong> — execute a compiled module on a physical analog computer and retrieve measurements.</li>
+</ul>
+<h2 id="supported-devices">Supported devices<a class="headerlink" href="#supported-devices" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Device type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LUCIDAC</code></td>
+<td>Single-cluster reconfigurable hybrid analog computer (8 integrators, 4 multipliers in default config). Multiple coupled units form a LUCISTACK; both appear as <code>LUCIDAC</code> to the user.</td>
+</tr>
+<tr>
+<td><code>REDAC</code></td>
+<td>Large-scale reconfigurable analog supercomputer built from carrier boards (mREDAC); up to seven carriers form an iREDAC. Multiple iREDACs can be connected into a freely-scalable "REDAC".</td>
+</tr>
+<tr>
+<td><code>SIMULATOR</code></td>
+<td>Software simulator that <em>mathematically</em> emulates any of the hardware models named above. Does not support feedback-type circuits through multipliers.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="how-users-interact-with-the-system">How users interact with the system<a class="headerlink" href="#how-users-interact-with-the-system" title="Permanent link">¶</a></h2>
+<p>Three entry paths are supported, each targeting a different use case:</p>
+<ul>
+<li><strong>CLI.</strong> The <code>analogcli</code> package provides the <code>analogcli</code> command. It is best suited for ad-hoc work, scripting, and CI smoke tests. See the <a href="cli/">CLI Reference</a> for details.</li>
+<li><strong>Programmatic (Python).</strong> <code>AnalogCloudClient</code> from <code>anabrid.cloud.cli.client</code> exposes the same operations as Python methods. It integrates with <a href="https://anabrid.github.io/pybrid-computing/">pybrid-computing</a> for direct device-object manipulation. See <a href="programmatic/">Programmatic Usage</a>.</li>
+<li><strong>Raw REST.</strong> Every operation is also reachable over HTTP under <code>/api/v1</code>. The OpenAPI schema is served by the deployment at <code>/api/docs</code>. See the <a href="api/">REST API</a> reference.</li>
+</ul>
+<p><strong>Note:</strong> Raw REST-based requests are mostly suited for <em>developers</em> of further clients to Analog Cloud. You can simplify your life by using tools that auto-generate REST client code in many different programming languages from Analog Cloud's OpenAPI spec, for example <a href="https://github.com/OpenAPITools/openapi-generator"><code>openapi-generator</code></a>.</p>
+<h2 id="interaction-model">Interaction model<a class="headerlink" href="#interaction-model" title="Permanent link">¶</a></h2>
+<div class="mermaid">flowchart LR
+    User([User])
+    CLI[analogcli CLI]
+    PY[AnalogCloudClient / pybrid]
+    REST{{"REST API<br/>/api/v1"}}
+    DB[("PostgreSQL +<br/>blob storage")]
+    BROKER[/"Message broker"/]
+    COMP[Compile worker]
+    RUN[Run worker]
+    DEV["Physical / simulated<br/>devices"]
+
+    User --&gt; CLI
+    User --&gt; PY
+    CLI --&gt; REST
+    PY --&gt; REST
+    REST &lt;--&gt; DB
+    REST --&gt; BROKER
+    BROKER --&gt; COMP
+    BROKER --&gt; RUN
+    RUN --&gt; DEV
+    COMP --&gt; DB
+    RUN --&gt; DB
+</div>
+<p>The user picks one of three entry paths (CLI, Python client, or raw HTTP). All three terminate at the same versioned REST API. The API persists tasks and enqueues them for asynchronous processing; workers pick them up, talk to devices via <a href="https://anabrid.github.io/pybrid-computing/">pybrid-computing</a>, and write results back to the same store. The user then polls the API until the task reaches a terminal state and downloads the result.</p>
+<h2 id="where-to-go-next">Where to go next<a class="headerlink" href="#where-to-go-next" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="getting-started/">Getting Started</a> — install the client and obtain credentials.</li>
+<li><a href="cli/">CLI Reference</a> — every <code>analogcli</code> verb with options and defaults.</li>
+<li><a href="programmatic/">Programmatic Usage</a> — end-to-end Python workflow.</li>
+<li><a href="api/">REST API</a> — endpoint groups, auth, and the live OpenAPI link.</li>
+</ul>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href=".." title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+<a class="btn btn-neutral float-right" href="getting-started/" title="Getting Started">Next <span class="icon icon-circle-arrow-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-code-fork" href="https://lab.analogparadigm.com/products/lucihub" style="color: #fcfcfc"> analogcloud</a>
+</span>
+<span><a href=".." style="color: #fcfcfc">« Previous</a></span>
+<span><a href="getting-started/" style="color: #fcfcfc">Next »</a></span>
+</span>
+</div>
+<script src="../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "..";</script>
+<script src="../js/theme_extra.js"></script>
+<script src="../js/theme.js"></script>
+<script src="../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+<script type="module">import mermaid from "https://unpkg.com/mermaid@10.4.0/dist/mermaid.esm.min.mjs";
+mermaid.initialize({
+    securityLevel: "loose"
+});</script></body>
+</html>

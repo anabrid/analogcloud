@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../../img/favicon.ico" rel="shortcut icon"/>
+<title>REST API - Analog Cloud</title>
+<link href="../../css/theme.css" rel="stylesheet"/>
+<link href="../../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "REST API";
+        var mkdocs_page_input_path = "user/api.md";
+        var mkdocs_page_url = null;
+      </script>
+<!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../.."> Analog Cloud
+        </a><div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../">User Guide</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting Started</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/">CLI Reference</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../programmatic/">Programmatic Usage</a>
+</li>
+<li class="toctree-l1 current"><a class="reference internal current" href="#">REST API</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#live-documentation">Live documentation</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#authentication">Authentication</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#endpoint-groups">Endpoint groups</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#system">/system</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#users">/users</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#devices">/devices</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#tasks">/tasks</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#task-search">Task search</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#non-versioned-endpoints">Non-versioned endpoints</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#common-types-and-workflows">Common types and workflows</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#for-developers-generating-clients">For Developers: Generating clients</a>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../..">Analog Cloud</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Docs" class="icon icon-home" href="../.."></a></li>
+<li class="breadcrumb-item">User Guide</li>
+<li class="breadcrumb-item active">REST API</li>
+<li class="wy-breadcrumbs-aside">
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<h1 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">¶</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h2>
+<p>Analog Cloud exposes a versioned REST API under <code>/api/v1</code>. The API is the single mode of interaction with the system: both <code>AnalogCloudClient</code> and the <code>analogcli</code> package go through it. Because the API is described by an OpenAPI-compatible specification (linked below), third-party clients can interface with Analog Cloud just as easily.</p>
+<h2 id="live-documentation">Live documentation<a class="headerlink" href="#live-documentation" title="Permanent link">¶</a></h2>
+<p>The deployed server serves the OpenAPI UI at <code>/api/docs</code> (Swagger UI) and <code>/api/redoc</code> (ReDoc). For anabrid's production deployment of Analog Cloud, this is reachable at <a href="https://redac.anabrid.com/api/docs">https://redac.anabrid.com/api/docs</a>.</p>
+<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">¶</a></h2>
+<p>Every request to <code>/api/v1/*</code> must carry a Bearer token:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a>Authorization: Bearer &lt;api_key&gt;
+</code></pre></div>
+<p>Missing, disabled, or unknown keys are answered with <code>403 Forbidden</code>. For run-task creation, the server additionally checks device access for the user (<code>403</code> on denial) and hourly / daily rate limits for the device class (<code>429</code> when exceeded). Limits are set by operators in the <code>auth.yml</code> file — contact your operator if you need to bump your limits.</p>
+<h2 id="endpoint-groups">Endpoint groups<a class="headerlink" href="#endpoint-groups" title="Permanent link">¶</a></h2>
+<p>For more detailed information and data types, please refer to the API documentation linked above.</p>
+<table>
+<thead>
+<tr>
+<th>Prefix</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/api/v1/system</code></td>
+<td>Deployment identity and uptime.</td>
+</tr>
+<tr>
+<td><code>/api/v1/users</code></td>
+<td>Authenticated user's profile and remaining quota.</td>
+</tr>
+<tr>
+<td><code>/api/v1/devices</code></td>
+<td>Registered devices and their cached entity blobs.</td>
+</tr>
+<tr>
+<td><code>/api/v1/tasks</code></td>
+<td>Compile and run tasks: creation, listing, status, logs, results, cancel, delete.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="system"><code>/system</code><a class="headerlink" href="#system" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/system/status</code></td>
+<td>Domain, version, uptime (seconds since server start).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="users"><code>/users</code><a class="headerlink" href="#users" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/users/me</code></td>
+<td>Profile (name, email, subscription, device whitelist), per-device-class rate-limit status, and the key's scheduling <code>priority</code> (higher ⇒ tasks served sooner; baseline is 1).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="devices"><code>/devices</code><a class="headerlink" href="#devices" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/devices</code></td>
+<td>List registered devices with name, type, availability, queue length.</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/devices/{device_name}/entity</code></td>
+<td>Retrieves the entity specification as binary blob. Can be used with <code>pyredacc</code> to configure the SIMULATOR and to analyze the structure of the hardware.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tasks"><code>/tasks</code><a class="headerlink" href="#tasks" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/v1/tasks/compile</code></td>
+<td>Create a compile task for devices (except SIMULATOR-type devices) which creates a circuit description from a system of ODEs.</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/v1/tasks/run</code></td>
+<td>Given a manually-created (via <code>pybrid</code>) or compiled circuit, run it on one device. Since a hardware description is embedded in every circuit, users may also point it to SIMULATOR devices in order to get a <em>mathematical</em> simulation of the circuit.</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/tasks</code></td>
+<td>List the caller's own tasks (identified via its API key), newest-first by creation time, with their states.</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/v1/tasks/search</code></td>
+<td>Search your own tasks with filters and pagination. See <a href="#task-search">Task search</a>.</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/tasks/{task_id}</code></td>
+<td>Returns details on a task given its ID. Returns <code>404</code> for a task the caller does not own.</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/tasks/{task_id}/status</code></td>
+<td>Current state plus full state history given a task ID.</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/tasks/{task_id}/log</code></td>
+<td>Retrieve log generated by a task, e.g., from the compiler executable.</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/tasks/{task_id}/result</code></td>
+<td>Download task's result. <code>application/octet-stream</code> (APB binary) for compile, <code>application/json</code> (nested measurement list) for run. Returns <code>404</code> until the task reaches <code>succeeded</code>.</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/v1/tasks/{task_id}/cancel</code></td>
+<td>Cancel a <code>queued</code> task. Returns <code>409</code> if not in <code>queued</code> state.</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/api/v1/tasks/{task_id}</code></td>
+<td>Delete the task and its blobs. Returns <code>409</code> if INPROGRESS and the 2-minute grace window has not elapsed. <code>204</code> on success.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="task-search">Task search<a class="headerlink" href="#task-search" title="Permanent link">¶</a></h3>
+<p><code>POST /api/v1/tasks/search</code> searches your own tasks with filters and pagination. All body fields are optional; an omitted filter is unconstrained, while an empty list matches nothing.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>user_id</code></td>
+<td>list[str]</td>
+<td>Owner API keys to match. Ignored for ordinary keys — your search is always scoped to your own tasks.</td>
+</tr>
+<tr>
+<td><code>device_name</code></td>
+<td>list[str]</td>
+<td>Match these device names.</td>
+</tr>
+<tr>
+<td><code>device_class</code></td>
+<td>list[<code>LUCIDAC</code> | <code>REDAC</code> | <code>SIMULATOR</code>]</td>
+<td>Match run tasks via the device's class and compile tasks via their backend.</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>list[<code>compile</code> | <code>run</code>]</td>
+<td>Match these task kinds.</td>
+</tr>
+<tr>
+<td><code>state</code></td>
+<td>list[TaskStateEnum]</td>
+<td>Match against each task's <strong>latest</strong> state.</td>
+</tr>
+<tr>
+<td><code>from</code></td>
+<td>datetime (ISO 8601)</td>
+<td>Start of the creation-time window.</td>
+</tr>
+<tr>
+<td><code>to</code></td>
+<td>datetime (ISO 8601)</td>
+<td>End of the creation-time window.</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td>int (1–1000)</td>
+<td>Page size. Default <code>50</code>.</td>
+</tr>
+<tr>
+<td><code>offset</code></td>
+<td>int (≥0)</td>
+<td>Number of leading matches to skip. Default <code>0</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>Filtering combines values with OR <strong>within</strong> a field and AND <strong>across</strong> fields. The window defaults to the last 24 hours when <code>from</code>/<code>to</code> are omitted and may span at most 90 days; a wider window is rejected with <code>422</code>. Unknown body fields are also rejected with <code>422</code> (the schema is <code>extra=forbid</code>).</p>
+<p>The response is a paginated envelope, <code>TaskSearchResponse</code>:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">TaskSearchResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a>    <span class="n">items</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">TaskSearchItem</span><span class="p">]</span>  <span class="c1"># task summary + user_id</span>
+<a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a>    <span class="n">total</span><span class="p">:</span> <span class="nb">int</span>                   <span class="c1"># full count of matching tasks, ignoring limit/offset</span>
+<a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a>    <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span>
+<a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a>    <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span>
+<a href="#__codelineno-1-6" id="__codelineno-1-6" name="__codelineno-1-6"></a>    <span class="n">next_offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span>      <span class="c1"># offset + limit if more remain, else null</span>
+</code></pre></div>
+<h3 id="non-versioned-endpoints">Non-versioned endpoints<a class="headerlink" href="#non-versioned-endpoints" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Auth</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/health</code></td>
+<td>none</td>
+<td>Liveness probe, returns <code>{"status": "healthy"}</code> when the server is operational.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-types-and-workflows">Common types and workflows<a class="headerlink" href="#common-types-and-workflows" title="Permanent link">¶</a></h2>
+<p>All task creation endpoints return the same shape:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">TaskCreatedResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a>    <span class="nb">id</span><span class="p">:</span> <span class="n">UUID</span>
+<a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a>    <span class="nb">type</span><span class="p">:</span> <span class="s2">"compile"</span> <span class="o">|</span> <span class="s2">"run"</span>
+<a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a>    <span class="n">state</span><span class="p">:</span> <span class="n">TaskStateEnum</span>  <span class="c1"># always "queued" at creation</span>
+<a href="#__codelineno-2-5" id="__codelineno-2-5" name="__codelineno-2-5"></a>    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span>
+</code></pre></div>
+<p>Task state values are <code>queued</code>, <code>inprogress</code>, <code>succeeded</code>, <code>failed</code>, and <code>cancelled</code>; the last three are terminal. Errors use a consistent body of <code>{"detail": "&lt;message&gt;"}</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>400</code></td>
+<td>Bad request (e.g. <code>backend = SIMULATOR</code> on a compile task).</td>
+</tr>
+<tr>
+<td><code>403</code></td>
+<td>Auth failure (missing, disabled, or unknown key) or device access denied.</td>
+</tr>
+<tr>
+<td><code>404</code></td>
+<td>Task / device not found, or task result not yet available.</td>
+</tr>
+<tr>
+<td><code>409</code></td>
+<td>State conflict (cancel a non-queued task, delete an in-flight task within grace).</td>
+</tr>
+<tr>
+<td><code>422</code></td>
+<td>Validation failure (e.g. a <code>/tasks/search</code> window wider than 90 days, or an unknown filter field).</td>
+</tr>
+<tr>
+<td><code>429</code></td>
+<td>Rate limit exceeded for the device class.</td>
+</tr>
+<tr>
+<td><code>500</code></td>
+<td>Server error.</td>
+</tr>
+<tr>
+<td><code>503</code></td>
+<td>Target device not available.</td>
+</tr>
+</tbody>
+</table>
+<p>Analog Cloud is a distributed system made up of a <em>server</em> (accepting and processing HTTP requests), a <em>database</em> (holding task data), a <em>queue</em> per registered device (a list of pending jobs to be processed), and <em>workers</em> that perform the actual processing of tasks. Different components may be deployed to different physical machines, but this is transparent from an API-only perspective. It is, however, useful to understand how tasks are processed in order to understand why a job might take a long time or fail:</p>
+<div class="mermaid">sequenceDiagram
+    autonumber
+    actor User
+    participant API as REST API
+    participant Q as Queue / Worker
+    participant DB as Storage
+
+    User-&gt;&gt;API: POST /api/v1/tasks/{compile|run}
+    API-&gt;&gt;DB: persist task, blobs
+    API-&gt;&gt;Q: enqueue
+    API--&gt;&gt;User: 201 TaskCreatedResponse (state=queued)
+
+    loop until terminal
+        User-&gt;&gt;API: GET /api/v1/tasks/{id}/status
+        API--&gt;&gt;User: TaskStatusResponse
+    end
+
+    Q-&gt;&gt;DB: write result + log (state -&gt; succeeded/failed)
+
+    User-&gt;&gt;API: GET /api/v1/tasks/{id}/result
+    API--&gt;&gt;User: APB bytes (compile) or JSON measurements (run)
+
+    User-&gt;&gt;API: GET /api/v1/tasks/{id}/log
+    API--&gt;&gt;User: log lines
+
+    opt cleanup
+        User-&gt;&gt;API: DELETE /api/v1/tasks/{id}
+        API-&gt;&gt;DB: drop task and blobs
+        API--&gt;&gt;User: 204
+    end
+</div>
+<h2 id="for-developers-generating-clients">For Developers: Generating clients<a class="headerlink" href="#for-developers-generating-clients" title="Permanent link">¶</a></h2>
+<p>The OpenAPI document served at <a href="https://redac.anabrid.com/api/docs">https://redac.anabrid.com/api/docs</a> / <a href="https://redac.anabrid.com/api/redoc">https://redac.anabrid.com/api/redoc</a> (with raw JSON at <a href="https://redac.anabrid.com/openapi.json">https://redac.anabrid.com/openapi.json</a>, assuming anabrid's production setup) is suitable as input to any standard OpenAPI client generator. <code>analogcli</code> is the reference Python client; equivalent clients in other languages can be produced from the same schema.</p>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../programmatic/" title="Programmatic Usage"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-code-fork" href="https://lab.analogparadigm.com/products/lucihub" style="color: #fcfcfc"> analogcloud</a>
+</span>
+<span><a href="../programmatic/" style="color: #fcfcfc">« Previous</a></span>
+</span>
+</div>
+<script src="../../js/jquery-3.6.0.min.js"></script>
+<script>var base_url = "../..";</script>
+<script src="../../js/theme_extra.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../search/main.js"></script>
+<script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+<script type="module">import mermaid from "https://unpkg.com/mermaid@10.4.0/dist/mermaid.esm.min.mjs";
+mermaid.initialize({
+    securityLevel: "loose"
+});</script></body>
+</html>

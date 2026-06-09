@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Programmatic Usage - Analog Cloud</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Programmatic Usage";
+        var mkdocs_page_input_path = "user/programmatic.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Analog Cloud
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">User Guide</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../">User Guide</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting Started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../cli/">CLI Reference</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Programmatic Usage</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#construction">Construction</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#api-surface">API surface</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#system-users-devices">System / users / devices</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#task-submission">Task submission</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#task-lifecycle-and-retrieval">Task lifecycle and retrieval</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#errors">Errors</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#integration-with-pybrid-computing">Integration with pybrid-computing</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#sympy-analang-via-pyredacc">SymPy → analang via pyredacc</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#end-to-end-workflow">End-to-end workflow</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api/">REST API</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Analog Cloud</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">User Guide</li>
+      <li class="breadcrumb-item active">Programmatic Usage</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="programmatic-usage">Programmatic Usage<a class="headerlink" href="#programmatic-usage" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The same operations exposed by the CLI are available as Python methods on <code>AnalogCloudClient</code>, imported from <code>anabrid.cloud.cli.client</code>. The client is a synchronous wrapper around the REST API; it uses <code>httpx</code> internally and supports use as a context manager. It pairs naturally with <a href="https://anabrid.github.io/pybrid-computing/">pybrid-computing</a> for direct manipulation of device objects (modules, integrators, multipliers, routing) and with <a href="https://pypi.org/project/pyredacc/">pyredacc</a> for converting SymPy ODEs into analang source.</p>
+<p>Note that the actual compiler (<code>redacc</code>) is currently not publicly available. <strong>Contact anabrid</strong> for more information.</p>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<p>The Python client is installed alongside <code>analogcli</code> (see <a href="../getting-started/">Getting Started</a>) — there is no separate package. Bring <code>pybrid-computing</code> and (optionally) <code>pyredacc</code> as direct dependencies of your project when you need their APIs.</p>
+<h2 id="construction">Construction<a class="headerlink" href="#construction" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">anabrid.cloud.cli.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalogCloudClient</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">hub</span> <span class="o">=</span> <span class="n">AnalogCloudClient</span><span class="p">(</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">base_url</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;ANALOGCLOUD_URL&quot;</span><span class="p">,</span> <span class="s2">&quot;https://redac.anabrid.com&quot;</span><span class="p">),</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">timeout</span><span class="o">=</span><span class="mf">30.0</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;ANALOGCLOUD_API_KEY&quot;</span><span class="p">],</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>base_url</code></td>
+<td>str</td>
+<td><code>https://redac.anabrid.com</code></td>
+<td>Base URL of the deployment.</td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td>float</td>
+<td><code>30.0</code></td>
+<td>Per-request HTTP timeout in seconds.</td>
+</tr>
+<tr>
+<td><code>api_key</code></td>
+<td>str</td>
+<td>required</td>
+<td>Bearer token. Raises <code>ValueError</code> if absent.</td>
+</tr>
+</tbody>
+</table>
+<p>Use the client as a context manager (<code>with AnalogCloudClient(...) as hub: ...</code>) or call <code>hub.close()</code> explicitly. The HTTP connection pool is otherwise kept open for the lifetime of the object.</p>
+<h2 id="api-surface">API surface<a class="headerlink" href="#api-surface" title="Permanent link">&para;</a></h2>
+<p>Since the <code>analogcli</code> and <code>analogcloud-common</code> wheels are source packages, you are free to point your IDE or your code agent at your installed packages and explore the code for further information. The functions documented below are mostly thin wrappers around the corresponding Analog Cloud API calls.</p>
+<h3 id="system-users-devices">System / users / devices<a class="headerlink" href="#system-users-devices" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Returns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get_system_status()</code></td>
+<td><code>SystemStatusResponse</code></td>
+<td>Domain, version, uptime.</td>
+</tr>
+<tr>
+<td><code>get_user_info()</code></td>
+<td><code>UserInfoResponse</code></td>
+<td>Profile and rate-limit quota for the authenticated user.</td>
+</tr>
+<tr>
+<td><code>get_devices()</code></td>
+<td><code>list[DeviceResponse]</code></td>
+<td>All registered devices, with availability and current queue length.</td>
+</tr>
+<tr>
+<td><code>get_device_entity(device_name)</code></td>
+<td><code>bytes</code></td>
+<td>Raw protobuf entity blob for a device. Raises <code>AnalogCloudAPIError</code> on missing device or empty entity (e.g. SIMULATOR).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="task-submission">Task submission<a class="headerlink" href="#task-submission" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Returns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>submit_compile_task(ode_source, backend, module, *, k0=None)</code></td>
+<td><code>UUID</code></td>
+<td>Submit a compile task. <code>backend</code> is <code>DeviceTypeEnum.LUCIDAC</code> or <code>REDAC</code> (<code>SIMULATOR</code> is rejected). <code>module</code> is the device entity blob (bytes); the client base64-encodes it on the wire.</td>
+</tr>
+<tr>
+<td><code>submit_run_task(device_name, module, *, sample_rate=10000, op_time=0.1)</code></td>
+<td><code>UUID</code></td>
+<td>Submit a run task. <code>module</code> is the compiled APB blob (bytes).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="task-lifecycle-and-retrieval">Task lifecycle and retrieval<a class="headerlink" href="#task-lifecycle-and-retrieval" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Returns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>list_tasks(state=None, type=None, limit=None, offset=None)</code></td>
+<td><code>list[TaskSummaryResponse]</code></td>
+<td>Paginated, filterable list scoped to the authenticated user.</td>
+</tr>
+<tr>
+<td><code>get_task_status(task_id)</code></td>
+<td><code>TaskStatusResponse</code></td>
+<td>Current state and full state history.</td>
+</tr>
+<tr>
+<td><code>get_task_log(task_id)</code></td>
+<td><code>TaskLogResponse</code></td>
+<td>Worker log lines as a <code>list[str]</code>.</td>
+</tr>
+<tr>
+<td><code>get_task_detail(task_id)</code></td>
+<td><code>CompileTaskDetailResponse</code> | <code>RunTaskDetailResponse</code></td>
+<td>Type-discriminated detail view (excludes blob data).</td>
+</tr>
+<tr>
+<td><code>get_task_result(task_id)</code></td>
+<td><code>bytes</code> (compile) or JSON-deserialised value (run)</td>
+<td>Compile result is the raw APB; run result is the measurement array <code>[run][channel][sample]</code>.</td>
+</tr>
+<tr>
+<td><code>cancel_task(task_id)</code></td>
+<td><code>TaskStatusResponse</code></td>
+<td>Request cancellation. Raises <code>StateConflictError</code> (HTTP 409) when the task is not QUEUED.</td>
+</tr>
+<tr>
+<td><code>delete_task(task_id)</code></td>
+<td><code>None</code></td>
+<td>Permanently delete task and blobs. Raises <code>StateConflictError</code> for INPROGRESS tasks inside the 2-minute grace window.</td>
+</tr>
+<tr>
+<td><code>wait_for_task_completion(task_id, poll_interval=1.0)</code></td>
+<td><code>TaskStatusResponse</code></td>
+<td>Block until the task reaches a terminal state (<code>SUCCEEDED</code>, <code>FAILED</code>, <code>CANCELLED</code>).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="errors">Errors<a class="headerlink" href="#errors" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Exception</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AnalogCloudAPIError</code></td>
+<td>Generic API or transport error; raised for non-2xx responses (except 409) and connection failures.</td>
+</tr>
+<tr>
+<td><code>StateConflictError</code></td>
+<td>HTTP 409 — operation incompatible with the task's current state. Subclass of <code>AnalogCloudAPIError</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="integration-with-pybrid-computing">Integration with pybrid-computing<a class="headerlink" href="#integration-with-pybrid-computing" title="Permanent link">&para;</a></h2>
+<p>For a deeper understanding of <code>pybrid-computing</code> (commonly referred to simply as <code>pybrid</code>), please refer to its own documentation at <a href="https://anabrid.github.io/pybrid-computing">https://anabrid.github.io/pybrid-computing</a>.</p>
+<p><code>pybrid-computing</code> normally needs a direct connection to a device to download its specification and exchange protobuf messages. Analog Cloud bridges that gap: it caches each device's entity blob and serves it over the REST API. The Python client fetches the blob, the helper <code>build_computer_from_entity</code> (in <code>anabrid.cloud.cli.entity_tree</code>) deserialises it into a live pybrid <code>Computer</code> / <code>LUCIStack</code> object, and you configure that object locally. The configured object is then re-serialised into a protobuf <code>pb.File</code> envelope and submitted to Analog Cloud as the <code>module</code> of a run task.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">anabrid.cloud.cli.entity_tree</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_computer_from_entity</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pybrid.base.proto.main_pb2</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pb</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pybrid.base.proto.versioning</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProtoVersioning</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">entity_bytes</span> <span class="o">=</span> <span class="n">hub</span><span class="o">.</span><span class="n">get_device_entity</span><span class="p">(</span><span class="s2">&quot;lucistack&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">lucistack</span> <span class="o">=</span> <span class="n">build_computer_from_entity</span><span class="p">(</span><span class="n">entity_bytes</span><span class="p">,</span> <span class="n">device_type</span><span class="o">=</span><span class="s2">&quot;LUCIDAC&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># configure pybrid Computer object (blocks, routing, ADC channels)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">cluster</span> <span class="o">=</span> <span class="n">lucistack</span><span class="o">.</span><span class="n">entities</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">clusters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">cluster</span><span class="o">.</span><span class="n">m0block</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">computation</span><span class="o">.</span><span class="n">ic</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">cluster</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="n">m_out</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">u_out</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">c_factor</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">m_in</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># ...</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="n">module</span> <span class="o">=</span> <span class="n">lucistack</span><span class="o">.</span><span class="n">get_serializer</span><span class="p">()()</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">lucistack</span><span class="p">)</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="n">file_msg</span> <span class="o">=</span> <span class="n">pb</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">ProtoVersioning</span><span class="o">.</span><span class="n">current</span><span class="p">(),</span> <span class="n">module</span><span class="o">=</span><span class="n">module</span><span class="p">)</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="n">module_bytes</span> <span class="o">=</span> <span class="n">file_msg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="n">run_task_id</span> <span class="o">=</span> <span class="n">hub</span><span class="o">.</span><span class="n">submit_run_task</span><span class="p">(</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    <span class="n">device_name</span><span class="o">=</span><span class="s2">&quot;lucistack&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    <span class="n">module</span><span class="o">=</span><span class="n">module_bytes</span><span class="p">,</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    <span class="n">sample_rate</span><span class="o">=</span><span class="mi">100_000</span><span class="p">,</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    <span class="n">op_time</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="p">)</span>
+</code></pre></div>
+<p>See <code>examples/run_with_pybrid.py</code> and <code>examples/run_with_lucipy.py</code> for end-to-end scripts. The integration currently supports single-circuit mode only; session-based pybrid workflows are not yet bridged.</p>
+<h2 id="sympy-analang-via-pyredacc">SymPy → analang via <code>pyredacc</code><a class="headerlink" href="#sympy-analang-via-pyredacc" title="Permanent link">&para;</a></h2>
+<p>The compile endpoint accepts ODEs in analang format only. For workflows that start from SymPy, use <a href="https://pypi.org/project/pyredacc/"><code>pyredacc</code></a> locally to translate the SymPy expression into analang text, then submit the text as <code>ode_source</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pyredacc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ODEAdapter</span><span class="p">,</span> <span class="n">SympyODE</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">t</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">X</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">sympy_ode</span> <span class="o">=</span> <span class="n">SympyODE</span><span class="p">(</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">odes</span><span class="o">=</span><span class="n">sp</span><span class="o">.</span><span class="n">Eq</span><span class="p">(</span><span class="n">X</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">X</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">initial_conditions</span><span class="o">=</span><span class="p">{</span><span class="n">X</span><span class="p">(</span><span class="n">t</span><span class="p">):</span> <span class="mf">1.0</span><span class="p">},</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">probes</span><span class="o">=</span><span class="p">[</span><span class="n">X</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">X</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">t</span><span class="p">)],</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;harmonic&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="p">)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="n">ode_source</span> <span class="o">=</span> <span class="n">ODEAdapter</span><span class="p">()</span><span class="o">.</span><span class="n">translate_sympy</span><span class="p">(</span><span class="n">sympy_ode</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="end-to-end-workflow">End-to-end workflow<a class="headerlink" href="#end-to-end-workflow" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">anabrid.cloud.cli.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalogCloudClient</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">anabrid.cloud.models.enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskStateEnum</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">hub</span> <span class="o">=</span> <span class="n">AnalogCloudClient</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;ANALOGCLOUD_API_KEY&quot;</span><span class="p">])</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="n">DEVICE</span> <span class="o">=</span> <span class="s2">&quot;lucistack&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="n">device</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">hub</span><span class="o">.</span><span class="n">get_devices</span><span class="p">()</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">DEVICE</span><span class="p">)</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="n">entity_bytes</span> <span class="o">=</span> <span class="n">hub</span><span class="o">.</span><span class="n">get_device_entity</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># 1. compile</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="n">compile_id</span> <span class="o">=</span> <span class="n">hub</span><span class="o">.</span><span class="n">submit_compile_task</span><span class="p">(</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    <span class="n">ode_source</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;harmonic.ana&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    <span class="n">backend</span><span class="o">=</span><span class="n">device</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    <span class="n">module</span><span class="o">=</span><span class="n">entity_bytes</span><span class="p">,</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="p">)</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="n">status</span> <span class="o">=</span> <span class="n">hub</span><span class="o">.</span><span class="n">wait_for_task_completion</span><span class="p">(</span><span class="n">compile_id</span><span class="p">)</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="k">if</span> <span class="n">status</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="n">TaskStateEnum</span><span class="o">.</span><span class="n">SUCCEEDED</span><span class="p">:</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;compile failed: </span><span class="si">{</span><span class="n">status</span><span class="o">.</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="n">module_bytes</span> <span class="o">=</span> <span class="n">hub</span><span class="o">.</span><span class="n">get_task_result</span><span class="p">(</span><span class="n">compile_id</span><span class="p">)</span>   <span class="c1"># raw APB</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="c1"># 2. run</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="n">run_id</span> <span class="o">=</span> <span class="n">hub</span><span class="o">.</span><span class="n">submit_run_task</span><span class="p">(</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>    <span class="n">device_name</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">,</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>    <span class="n">module</span><span class="o">=</span><span class="n">module_bytes</span><span class="p">,</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>    <span class="n">sample_rate</span><span class="o">=</span><span class="mi">100_000</span><span class="p">,</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>    <span class="n">op_time</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="p">)</span>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="n">status</span> <span class="o">=</span> <span class="n">hub</span><span class="o">.</span><span class="n">wait_for_task_completion</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="k">if</span> <span class="n">status</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="n">TaskStateEnum</span><span class="o">.</span><span class="n">SUCCEEDED</span><span class="p">:</span>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run failed: </span><span class="si">{</span><span class="n">status</span><span class="o">.</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="n">runs</span> <span class="o">=</span> <span class="n">hub</span><span class="o">.</span><span class="n">get_task_result</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span>               <span class="c1"># [run][channel][sample]</span>
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a><span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">runs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</code></pre></div>
+<p>For a SymPy-driven variant, replace <code>open("harmonic.ana").read()</code> with the output of <code>ODEAdapter().translate_sympy(...)</code> shown above. The full set of working examples lives in <code>examples/</code>: <code>run_with_analang.py</code>, <code>run_with_sympy.py</code>, <code>run_with_lucipy.py</code>, and <code>run_with_pybrid.py</code>.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../cli/" class="btn btn-neutral float-left" title="CLI Reference"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../api/" class="btn btn-neutral float-right" title="REST API">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://lab.analogparadigm.com/products/lucihub" class="fa fa-code-fork" style="color: #fcfcfc"> analogcloud</a>
+        </span>
+    
+    
+      <span><a href="../cli/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../api/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
